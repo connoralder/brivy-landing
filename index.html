@@ -42,7 +42,7 @@
                     <p class="hero-description">Spend less time charting and more time connecting with clients. Brivy streamlines the documentation process, generating therapy notes and treatment summaries in seconds, giving you hours back in your day.</p>
                     <div class="hero-ctas">
                         <a href="https://app.brivy.io/signup" class="btn-primary btn-large">Try Free</a>
-                        <button class="btn-secondary btn-large">Watch Demo</button>
+                        <button class="btn-secondary btn-large" id="watchDemoBtn">Watch Demo</button>
                     </div>
                 </div>
                 <div class="hero-right">
@@ -289,6 +289,18 @@
             </div>
         </div>
     </footer>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <span class="video-modal-close">&times;</span>
+            <video id="demoVideo" controls>
+                <source src="demo-video.mp4" type="video/mp4">
+                <source src="demo-video.webm" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

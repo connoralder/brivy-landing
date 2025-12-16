@@ -199,6 +199,59 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Uncomment the line below if you want to enable mobile menu
     // createMobileMenu();
+    
+    // Video Modal functionality
+    const watchDemoBtn = document.getElementById('watchDemoBtn');
+    const videoModal = document.getElementById('videoModal');
+    const demoVideo = document.getElementById('demoVideo');
+    const closeModal = document.querySelector('.video-modal-close');
+    
+    if (watchDemoBtn && videoModal) {
+        // Open modal when "Watch Demo" button is clicked
+        watchDemoBtn.addEventListener('click', function() {
+            videoModal.classList.add('active');
+            // Play video when modal opens
+            demoVideo.play().catch(err => {
+                console.log('Video autoplay prevented:', err);
+            });
+        });
+        
+        // Close modal when X is clicked
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                videoModal.classList.remove('active');
+                demoVideo.pause();
+                demoVideo.currentTime = 0;
+            });
+        }
+        
+        // Close modal when clicking outside the video
+        videoModal.addEventListener('click', function(e) {
+            // Only close if clicking directly on the modal background, not on video or its container
+            if (e.target === videoModal) {
+                videoModal.classList.remove('active');
+                demoVideo.pause();
+                demoVideo.currentTime = 0;
+            }
+        });
+        
+        // Prevent clicks on video content from closing the modal
+        const videoModalContent = document.querySelector('.video-modal-content');
+        if (videoModalContent) {
+            videoModalContent.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event from bubbling to modal
+            });
+        }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+                videoModal.classList.remove('active');
+                demoVideo.pause();
+                demoVideo.currentTime = 0;
+            }
+        });
+    }
 });
 
 // Utility function for debouncing
