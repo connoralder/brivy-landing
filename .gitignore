@@ -1,0 +1,9 @@
+# Video files (too large for GitHub)
+*.mp4
+*.webm
+*.mov
+*.avi
+
+# Keep demo-video.mp4 locally but don't commit it
+demo-video.mp4
+
