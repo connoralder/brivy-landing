@@ -5,27 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms of Service - Brivy</title>
     <meta name="description" content="Brivy Terms of Service - Read our terms and conditions for using the AI therapy scribe platform.">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="color-scheme" content="light dark">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
     <!-- Sticky Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <a href="index.html" class="nav-logo-link">
-                    <span class="nav-brivy-logo">Brivy</span>
-                </a>
-            </div>
-            <div class="nav-menu">
+            <a href="index.html" class="nav-logo-link" aria-label="Brivy home">
+                <span class="wordmark">Brivy</span>
+            </a>
+            <div class="nav-menu" id="navMenu">
                 <a href="index.html#how-it-works" class="nav-link">How it works</a>
-                <a href="index.html#testimonials" class="nav-link">Testimonials</a>
                 <a href="index.html#pricing" class="nav-link">Pricing</a>
                 <a href="index.html#faq" class="nav-link">FAQ</a>
+                <a href="index.html#waitlist" class="btn-primary nav-menu-cta" data-waitlist>Join the waitlist</a>
             </div>
             <div class="nav-cta">
-                <a href="https://app.brivy.io/signup" class="btn-primary">Try Free</a>
+                <a href="index.html#waitlist" class="btn-primary btn-small" data-waitlist>Join the waitlist</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -114,9 +118,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-left">
-                    <div class="footer-logo">
-                        <img src="https://via.placeholder.com/120x40/4F46E5/FFFFFF?text=BRIVY" alt="Brivy Logo">
-                    </div>
+                    <span class="wordmark wordmark--footer">Brivy</span>
                     <p>The AI therapy scribe built for therapists. Spend less time charting and more time connecting with clients.</p>
                 </div>
                 <div class="footer-middle">
@@ -124,7 +126,6 @@
                         <h4>Menu</h4>
                         <ul>
                             <li><a href="index.html#how-it-works">How it works</a></li>
-                            <li><a href="index.html#testimonials">Testimonials</a></li>
                             <li><a href="index.html#pricing">Pricing</a></li>
                             <li><a href="index.html#faq">FAQ</a></li>
                         </ul>
@@ -139,23 +140,23 @@
                     </div>
                 </div>
                 <div class="footer-right">
-                    <h4>Stay Updated</h4>
-                    <p>Get the latest updates and mental health AI insights.</p>
-                    <div class="newsletter">
-                        <input type="email" placeholder="Enter your email">
-                        <button class="btn-primary">Subscribe</button>
-                    </div>
-                    <div class="contact-info">
-                        <p><a href="mailto:support@brivy.io"><i class="fas fa-envelope"></i> support@brivy.io</a></p>
-                    </div>
+                    <h4>Stay updated</h4>
+                    <p>Get Brivy news and mental health AI insights.</p>
+                    <form class="waitlist-form waitlist-form--compact" data-waitlist-form data-source="footer">
+                        <label class="sr-only" for="footerEmail">Email address</label>
+                        <input id="footerEmail" type="email" name="email" placeholder="Enter your email" required autocomplete="email">
+                        <button type="submit" class="btn-primary">Subscribe</button>
+                        <p class="form-status" role="status" aria-live="polite"></p>
+                    </form>
+                    <p class="contact-info"><a href="mailto:support@brivy.io"><i class="fas fa-envelope"></i> support@brivy.io</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Brivy. All rights reserved.</p>
+                <p>&copy; <span data-year>2026</span> Brivy. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

@@ -1,301 +1,246 @@
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // FAQ Accordion functionality
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-            // Close all other FAQ items
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
-                }
-            });
-            
-            // Toggle current item
-            item.classList.toggle('active');
-        });
+/* ==========================================================================
+   Config
+   ========================================================================== */
+
+// Where waitlist emails are POSTed. Any form-backend that accepts a normal
+// form POST works (Formspree, Basin, Getform, a Google Apps Script, etc.).
+// Example (Formspree): 'https://formspree.io/f/abcdwxyz'
+// While this is empty, signups fall back to opening an email to WAITLIST_FALLBACK_EMAIL.
+const WAITLIST_ENDPOINT = '';
+const WAITLIST_FALLBACK_EMAIL = 'support@brivy.io';
+
+const YOUTUBE_VIDEO_ID = 'Bs-IgzauV2g';
+
+/* ==========================================================================
+   Helpers
+   ========================================================================== */
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+let lastFocused = null;
+
+function openModal(modal, focusTarget) {
+    lastFocused = document.activeElement;
+    modal.classList.add('active');
+    document.body.classList.add('modal-open');
+    if (focusTarget) setTimeout(() => focusTarget.focus(), 50);
+}
+
+function closeModal(modal) {
+    if (!modal || !modal.classList.contains('active')) return;
+    modal.classList.remove('active');
+    document.body.classList.remove('modal-open');
+    modal.dispatchEvent(new Event('modal:close'));
+    if (lastFocused) lastFocused.focus();
+}
+
+function wireModalDismiss(modal) {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.closest('.modal-close')) closeModal(modal);
     });
-    
-    // Smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll('a[href^="#"]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
-                
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-    
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
-    let lastScrollTop = 0;
-    
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            // Scrolling down
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            // Scrolling up
-            navbar.style.transform = 'translateY(0)';
-        }
-        
-        lastScrollTop = scrollTop;
-    });
-    
-    // Add navbar transition
-    navbar.style.transition = 'transform 0.3s ease-in-out';
-    
-    // Newsletter form handling
-    const newsletterForm = document.querySelector('.newsletter');
-    if (newsletterForm) {
-        const emailInput = newsletterForm.querySelector('input[type="email"]');
-        const submitBtn = newsletterForm.querySelector('.btn-primary');
-        
-        submitBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const email = emailInput.value.trim();
-            
-            if (email && isValidEmail(email)) {
-                // Here you would typically send the email to your backend
-                alert('Thank you for subscribing! We\'ll keep you updated on Brivy news.');
-                emailInput.value = '';
-            } else {
-                alert('Please enter a valid email address.');
-            }
-        });
-    }
-    
-    // Email validation function
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    // CTA button tracking (you can integrate with analytics here)
-    const ctaButtons = document.querySelectorAll('.btn-primary');
-    
-    ctaButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Track CTA clicks for analytics
-            const buttonText = this.textContent.trim();
-            console.log(`CTA clicked: ${buttonText}`);
-            
-            // You can integrate with Google Analytics, Mixpanel, etc. here
-            // Example: gtag('event', 'click', { event_category: 'CTA', event_label: buttonText });
-        });
-    });
-    
-    // Intersection Observer for animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+}
+
+/* ==========================================================================
+   Waitlist
+   ========================================================================== */
+function buildWaitlistModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.id = 'waitlistModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'waitlistTitle');
+    modal.innerHTML = `
+        <div class="waitlist-dialog">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <span class="wordmark">Brivy</span>
+            <h3 id="waitlistTitle">Join the waitlist</h3>
+            <p>Brivy is opening to new therapists in waves. Leave your email and we'll reach out when there's a spot for you.</p>
+            <form class="waitlist-form" data-waitlist-form data-source="modal">
+                <label class="sr-only" for="modalEmail">Email address</label>
+                <input id="modalEmail" type="email" name="email" placeholder="you@yourpractice.com" required autocomplete="email">
+                <button type="submit" class="btn-primary">Join the waitlist</button>
+                <p class="form-status" role="status" aria-live="polite"></p>
+            </form>
+            <p class="fine-print">No spam. Just one email when it's your turn.</p>
+        </div>`;
+    document.body.appendChild(modal);
+    wireModalDismiss(modal);
+    return modal;
+}
+
+async function submitWaitlist(form) {
+    const input = form.querySelector('input[type="email"]');
+    const button = form.querySelector('button[type="submit"]');
+    const status = form.querySelector('.form-status');
+    const email = input.value.trim();
+
+    const setStatus = (msg, type) => {
+        status.textContent = msg;
+        status.classList.toggle('is-error', type === 'error');
+        status.classList.toggle('is-success', type === 'success');
     };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements for animation
-    const animatedElements = document.querySelectorAll('.benefit-card, .step-card, .pricing-card, .testimonial-card');
-    
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-    
-    // Add loading animation for images
-    const images = document.querySelectorAll('img:not(.institution-logo)');
-    
-    images.forEach(img => {
-        img.addEventListener('load', function() {
-            this.style.opacity = '1';
-        });
-        
-        img.style.opacity = '0';
-        img.style.transition = 'opacity 0.3s ease';
-    });
-    
-    // Mobile menu toggle (if you want to add a mobile menu later)
-    function createMobileMenu() {
-        const navContainer = document.querySelector('.nav-container');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        // Create mobile menu button
-        const mobileMenuBtn = document.createElement('button');
-        mobileMenuBtn.className = 'mobile-menu-btn';
-        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        mobileMenuBtn.style.display = 'none';
-        
-        // Add mobile menu styles
-        const mobileStyles = `
-            @media (max-width: 768px) {
-                .mobile-menu-btn {
-                    display: block !important;
-                    background: none;
-                    border: none;
-                    font-size: 24px;
-                    color: #374151;
-                    cursor: pointer;
-                }
-                
-                .nav-menu {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    right: 0;
-                    background: white;
-                    border-top: 1px solid #e5e7eb;
-                    flex-direction: column;
-                    padding: 1rem;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                }
-                
-                .nav-menu.active {
-                    display: flex;
-                }
-                
-                .nav-menu .nav-link {
-                    padding: 0.5rem 0;
-                    border-bottom: 1px solid #e5e7eb;
-                }
-            }
-        `;
-        
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = mobileStyles;
-        document.head.appendChild(styleSheet);
-        
-        navContainer.appendChild(mobileMenuBtn);
-        
-        mobileMenuBtn.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
+
+    if (!isValidEmail(email)) {
+        setStatus('Please enter a valid email address.', 'error');
+        input.focus();
+        return;
     }
-    
-    // Uncomment the line below if you want to enable mobile menu
-    // createMobileMenu();
-    
-    // Video Modal functionality
-    const watchDemoBtn = document.getElementById('watchDemoBtn');
+
+    if (!WAITLIST_ENDPOINT) {
+        const subject = encodeURIComponent('Brivy waitlist');
+        const body = encodeURIComponent(`Please add me to the Brivy waitlist: ${email}`);
+        window.location.href = `mailto:${WAITLIST_FALLBACK_EMAIL}?subject=${subject}&body=${body}`;
+        setStatus('Opening your email app to finish signing up…', 'success');
+        return;
+    }
+
+    const originalLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Joining…';
+    setStatus('', null);
+
+    try {
+        const data = new FormData();
+        data.append('email', email);
+        data.append('source', form.dataset.source || 'site');
+        const res = await fetch(WAITLIST_ENDPOINT, {
+            method: 'POST',
+            body: data,
+            headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        input.value = '';
+        setStatus("You're on the list! We'll be in touch.", 'success');
+    } catch (err) {
+        console.error('Waitlist signup failed:', err);
+        setStatus(`Something went wrong. Email us at ${WAITLIST_FALLBACK_EMAIL} instead.`, 'error');
+    } finally {
+        button.disabled = false;
+        button.textContent = originalLabel;
+    }
+}
+
+/* ==========================================================================
+   Init
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Waitlist -----------------------------------------------------------
+    const waitlistModal = buildWaitlistModal();
+    const waitlistInput = waitlistModal.querySelector('input');
+
+    document.querySelectorAll('[data-waitlist]').forEach((el) => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMobileMenu();
+            openModal(waitlistModal, waitlistInput);
+        });
+    });
+
+    document.querySelectorAll('[data-waitlist-form]').forEach((form) => {
+        form.setAttribute('novalidate', '');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitWaitlist(form);
+        });
+    });
+
+    // --- Demo video ---------------------------------------------------------
     const videoModal = document.getElementById('videoModal');
     const demoVideo = document.getElementById('demoVideo');
-    const closeModal = document.querySelector('.video-modal-close');
-    const youtubeVideoId = 'Bs-IgzauV2g';
-    const youtubeBaseUrl = 'https://www.youtube.com/embed/';
-    
-    // Function to stop YouTube video
-    function stopYouTubeVideo() {
-        if (demoVideo) {
-            // Remove src to stop video playback
-            demoVideo.src = '';
-        }
-    }
-    
-    // Function to load YouTube video
-    function loadYouTubeVideo(autoplay = true) {
-        if (demoVideo) {
-            const autoplayParam = autoplay ? '?autoplay=1' : '';
-            demoVideo.src = youtubeBaseUrl + youtubeVideoId + autoplayParam;
-        }
-    }
-    
-    if (watchDemoBtn && videoModal) {
-        // Open modal when "Watch Demo" button is clicked
-        watchDemoBtn.addEventListener('click', function() {
-            videoModal.classList.add('active');
-            loadYouTubeVideo(true); // Load with autoplay
-        });
-        
-        // Close modal when X is clicked
-        if (closeModal) {
-            closeModal.addEventListener('click', function() {
-                videoModal.classList.remove('active');
-                stopYouTubeVideo(); // Stop video when closing
-            });
-        }
-        
-        // Close modal when clicking outside the video
-        videoModal.addEventListener('click', function(e) {
-            // Only close if clicking directly on the modal background, not on video or its container
-            if (e.target === videoModal) {
-                videoModal.classList.remove('active');
-                stopYouTubeVideo(); // Stop video when closing
-            }
-        });
-        
-        // Prevent clicks on video content from closing the modal
-        const videoModalContent = document.querySelector('.video-modal-content');
-        if (videoModalContent) {
-            videoModalContent.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent event from bubbling to modal
-            });
-        }
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && videoModal.classList.contains('active')) {
-                videoModal.classList.remove('active');
-                stopYouTubeVideo(); // Stop video when closing
-            }
-        });
-    }
-});
 
-// Utility function for debouncing
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
+    if (videoModal && demoVideo) {
+        wireModalDismiss(videoModal);
+        videoModal.addEventListener('modal:close', () => { demoVideo.src = ''; });
 
-// Performance optimization: Lazy load images
-function lazyLoadImages() {
-    const images = document.querySelectorAll('img[data-src]');
-    
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-                imageObserver.unobserve(img);
-            }
+        document.querySelectorAll('[data-demo]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                demoVideo.src = `https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`;
+                openModal(videoModal, videoModal.querySelector('.modal-close'));
+            });
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.modal.active').forEach(closeModal);
+        closeMobileMenu();
+    });
+
+    // --- Mobile menu --------------------------------------------------------
+    const navMenu = document.getElementById('navMenu') || document.querySelector('.nav-menu');
+    const menuBtn = document.getElementById('mobileMenuBtn');
+
+    function closeMobileMenu() {
+        if (!navMenu || !menuBtn) return;
+        navMenu.classList.remove('active');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+
+    if (navMenu && menuBtn) {
+        menuBtn.addEventListener('click', () => {
+            const open = navMenu.classList.toggle('active');
+            menuBtn.setAttribute('aria-expanded', String(open));
+            menuBtn.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        navMenu.querySelectorAll('.nav-link').forEach((link) => link.addEventListener('click', closeMobileMenu));
+    }
+
+    // --- Smooth scrolling for in-page links -----------------------------------
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('a[href^="#"]:not([data-waitlist])').forEach((link) => {
+        link.addEventListener('click', (e) => {
+            const target = document.querySelector(link.getAttribute('href'));
+            if (!target) return;
+            e.preventDefault();
+            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
         });
     });
-    
-    images.forEach(img => imageObserver.observe(img));
-}
 
-// Initialize lazy loading if needed
-// lazyLoadImages();
+    // --- Navbar hide on scroll down -----------------------------------------
+    const navbar = document.querySelector('.navbar');
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const menuOpen = navMenu && navMenu.classList.contains('active');
+        navbar.classList.toggle('nav-hidden', !menuOpen && scrollTop > lastScrollTop && scrollTop > 120);
+        lastScrollTop = scrollTop;
+    }, { passive: true });
+
+    // --- FAQ accordion -------------------------------------------------------
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach((item) => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const willOpen = !item.classList.contains('active');
+            faqItems.forEach((other) => {
+                other.classList.remove('active');
+                other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            });
+            item.classList.toggle('active', willOpen);
+            question.setAttribute('aria-expanded', String(willOpen));
+        });
+    });
+
+    // --- Scroll reveal ---------------------------------------------------------
+    const revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach((el, i) => {
+            el.style.transitionDelay = `${(i % 3) * 70}ms`;
+            observer.observe(el);
+        });
+    } else {
+        revealEls.forEach((el) => el.classList.add('is-visible'));
+    }
+
+    // --- Footer year -----------------------------------------------------------
+    document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
+});

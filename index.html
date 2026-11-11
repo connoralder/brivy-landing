@@ -5,51 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brivy - AI Therapy Scribe Built for Therapists</title>
     <meta name="description" content="Spend less time charting and more time connecting with clients. Brivy streamlines therapy documentation, generating therapy notes and treatment summaries in seconds.">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="color-scheme" content="light dark">
+    <script>document.documentElement.classList.add('js');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
     <!-- Sticky Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <a href="index.html" class="nav-logo-link">
-                    <span class="nav-brivy-logo">Brivy</span>
-                </a>
-            </div>
-            <div class="nav-menu">
+            <a href="index.html" class="nav-logo-link" aria-label="Brivy home">
+                <span class="wordmark">Brivy</span>
+            </a>
+            <div class="nav-menu" id="navMenu">
                 <a href="#how-it-works" class="nav-link">How it works</a>
                 <a href="#pricing" class="nav-link">Pricing</a>
                 <a href="#faq" class="nav-link">FAQ</a>
+                <a href="#waitlist" class="btn-primary nav-menu-cta" data-waitlist>Join the waitlist</a>
             </div>
             <div class="nav-cta">
-                <a href="https://app.brivy.io/signup" class="btn-primary">Try Free</a>
+                <a href="#waitlist" class="btn-primary btn-small" data-waitlist>Join the waitlist</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-left">
-                    <div class="hero-brand">
-                        <h1 class="brivy-logo">Brivy</h1>
+        <div class="container hero-content">
+            <div class="hero-left">
+                <span class="eyebrow"><i class="fas fa-shield-halved"></i> The AI scribe built for therapists</span>
+                <h1 class="hero-title">Charting will never be <span class="gradient-text">the same.</span></h1>
+                <p class="hero-description">Spend less time charting and more time connecting with clients. Brivy turns your sessions into therapy notes, treatment summaries and insurance codes in seconds, giving you hours back in your day.</p>
+                <div class="hero-ctas">
+                    <a href="#waitlist" class="btn-primary btn-large" data-waitlist>Join the waitlist</a>
+                    <button class="btn-secondary btn-large" data-demo><i class="fas fa-play"></i> Watch demo</button>
+                </div>
+                <ul class="hero-points">
+                    <li><i class="fas fa-check"></i> HIPAA compliant</li>
+                    <li><i class="fas fa-check"></i> DAP, SOAP &amp; BIRP notes</li>
+                    <li><i class="fas fa-check"></i> Built by clinicians</li>
+                </ul>
+            </div>
+
+            <!-- Product mock: recreated Brivy session view -->
+            <div class="hero-visual">
+                <div class="app-window" aria-hidden="true">
+                    <div class="app-chrome">
+                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        <span class="app-url"><i class="fas fa-lock"></i> app.brivy.io/sessions</span>
                     </div>
-                    <h2 class="hero-title">CHARTING WILL NEVER BE THE SAME</h2>
-                    <p class="hero-subtitle">The AI scribe built for therapists.</p>
-                    <p class="hero-description">Spend less time charting and more time connecting with clients. Brivy streamlines the documentation process, generating therapy notes and treatment summaries in seconds, giving you hours back in your day.</p>
-                    <div class="hero-ctas">
-                        <a href="https://app.brivy.io/signup" class="btn-primary btn-large">Try Free</a>
-                        <button class="btn-secondary btn-large" id="watchDemoBtn">Watch Demo</button>
+                    <div class="app">
+                        <div class="app-header">
+                            <span class="app-logo">Brivy</span>
+                            <span class="app-nav"><span class="active">Sessions</span><span>Patients</span></span>
+                            <span class="app-actions">
+                                <span class="app-btn"><i class="fas fa-microphone"></i> Record</span>
+                                <span class="app-btn ghost">Upload</span>
+                                <span class="app-avatar">DR</span>
+                            </span>
+                        </div>
+                        <div class="app-body">
+                            <div class="app-session">
+                                <span class="app-client">Client J.M. · 50 min</span>
+                                <span class="app-status"><i class="fas fa-circle-check"></i> Note ready in 14s</span>
+                            </div>
+                            <div class="app-tabs">
+                                <span>Summary</span><span class="active">Note</span><span>Transcript</span><span>Analytics</span>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-head">
+                                    <span class="app-card-title">DAP Note</span>
+                                    <span class="app-copy"><i class="far fa-copy"></i> Copy note</span>
+                                </div>
+                                <div class="app-section">
+                                    <span class="app-label">Data</span>
+                                    <p>Client reports sleeping 6–7 hours, up from 4–5, and completed two of three planned behavioral activation tasks. Described work stress as "more manageable."</p>
+                                </div>
+                                <div class="app-section">
+                                    <span class="app-label">Assessment</span>
+                                    <p>Depressive symptoms improving; PHQ-9 down from 16 to 11. Engaged and insightful, with good progress toward goals.</p>
+                                </div>
+                                <div class="app-section">
+                                    <span class="app-label">Plan</span>
+                                    <p>Continue weekly CBT. Add one social activity before next session.</p>
+                                </div>
+                            </div>
+                            <div class="app-card app-codes">
+                                <span class="app-label">Insurance codes</span>
+                                <span class="app-chips"><span>F32.1</span><span>Z56.6</span><span>90837</span></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="hero-right">
-                    <div class="hero-image">
-                        <img src="https://via.placeholder.com/600x400/1F2937/FFFFFF?text=Brivy+Dashboard" alt="Brivy AI Medical Scribe Dashboard">
-                    </div>
-                </div>
+                <button class="play-badge" data-demo>
+                    <span class="play-icon"><i class="fas fa-play"></i></span>
+                    <span><strong>Watch the demo</strong><small>See Brivy in action · 1:36</small></span>
+                </button>
             </div>
         </div>
     </section>
@@ -57,59 +114,48 @@
     <!-- Partners Section -->
     <section class="partners">
         <div class="container">
-            <p class="partners-text">Trusted by therapists at:</p>
-            <div class="institution-logo-container">
-                <img src="wash-u-medicine-logo.png" alt="Washington University School of Medicine" class="institution-logo">
-            </div>
+            <p class="partners-text">Trusted by therapists at</p>
+            <img src="wash-u-medicine-logo.png" alt="Washington University School of Medicine" class="institution-logo" width="1024" height="439">
         </div>
     </section>
 
     <!-- Benefits Section -->
     <section class="benefits">
         <div class="container">
-            <h2 class="section-title">Benefits</h2>
+            <div class="section-head">
+                <span class="section-kicker">Benefits</span>
+                <h2 class="section-title">Less paperwork. More presence.</h2>
+            </div>
             <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h3>Save 10 Hours Per Week</h3>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Save 10 hours per week</h3>
                     <p>Forget after-hours charting and reclaim your evenings. Brivy creates accurate, HIPAA-compliant therapy notes in seconds.</p>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>100% HIPAA Compliant</h3>
-                    <p>Built with safety-first approach. We understand that protecting PHI is non-negotiable for mental health professionals.</p>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-shield-halved"></i></div>
+                    <h3>100% HIPAA compliant</h3>
+                    <p>Built with a safety-first approach. We understand that protecting PHI is non-negotiable for mental health professionals.</p>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <h3>AI-Powered Accuracy</h3>
-                    <p>Advanced AI technology ensures accurate transcriptions and generates precise therapy notes and treatment codes.</p>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-brain"></i></div>
+                    <h3>AI-powered accuracy</h3>
+                    <p>Accurate transcriptions that become precise therapy notes, tuned for the language of mental health care.</p>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-user-md"></i>
-                    </div>
-                    <h3>Built by Therapists</h3>
-                    <p>Designed by mental health professionals who understand the challenges of therapy documentation.</p>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-user-doctor"></i></div>
+                    <h3>Built by clinicians</h3>
+                    <p>Designed by mental health professionals who understand the real challenges of therapy documentation.</p>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-file-medical"></i>
-                    </div>
-                    <h3>Instant Therapy Notes</h3>
-                    <p>Generate comprehensive therapy notes automatically from your client sessions in real-time.</p>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-file-medical"></i></div>
+                    <h3>Instant therapy notes</h3>
+                    <p>Comprehensive DAP, SOAP or BIRP notes generated automatically from every client session.</p>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3>Treatment Codes</h3>
-                    <p>Get instant treatment codes relevant to your therapy session. One less thing for you to worry about.</p>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-hashtag"></i></div>
+                    <h3>Treatment codes</h3>
+                    <p>Get instant treatment codes relevant to your session. One less thing for you to worry about.</p>
                 </div>
             </div>
         </div>
@@ -118,127 +164,138 @@
     <!-- How It Works Section -->
     <section class="how-it-works" id="how-it-works">
         <div class="container">
-            <h2 class="section-title">How it works</h2>
-            <div class="steps-grid">
-                <div class="step-card">
+            <div class="section-head">
+                <span class="section-kicker">How it works</span>
+                <h2 class="section-title">From session to signed note in four steps</h2>
+            </div>
+            <ol class="steps-grid">
+                <li class="step-card reveal">
                     <div class="step-number">1</div>
                     <h3>Record</h3>
-                    <p>Just click record and get on with your session. Brivy securely listens and transcribes your conversation.</p>
-                </div>
-                <div class="step-card">
+                    <p>Click record and get on with your session. Brivy securely listens and transcribes.</p>
+                </li>
+                <li class="step-card reveal">
                     <div class="step-number">2</div>
-                    <h3>Get Summary</h3>
-                    <p>Within seconds, Brivy generates a clear, concise summary of your therapy session into structured notes.</p>
-                </div>
-                <div class="step-card">
+                    <h3>Get a summary</h3>
+                    <p>Within seconds, your session becomes clear, structured notes.</p>
+                </li>
+                <li class="step-card reveal">
                     <div class="step-number">3</div>
-                    <h3>Get Treatment Codes</h3>
-                    <p>Get instant treatment codes relevant to your therapy session. One less thing for you to worry about.</p>
-                </div>
-                <div class="step-card">
+                    <h3>Get codes</h3>
+                    <p>Relevant treatment codes are suggested automatically, ready to copy.</p>
+                </li>
+                <li class="step-card reveal">
                     <div class="step-number">4</div>
                     <h3>Done</h3>
-                    <p>Copy and paste the note into your chart. Voilà! Look at all that time you saved.</p>
-                </div>
-            </div>
+                    <p>Paste the note into your chart. Voilà. Look at all that time you saved.</p>
+                </li>
+            </ol>
         </div>
     </section>
 
     <!-- Pricing Section -->
     <section class="pricing" id="pricing">
         <div class="container">
-            <h2 class="section-title">Pricing</h2>
+            <div class="section-head">
+                <span class="section-kicker">Pricing</span>
+                <h2 class="section-title">Simple pricing, no surprises</h2>
+            </div>
             <div class="pricing-grid">
-                <div class="pricing-card">
+                <div class="pricing-card reveal">
                     <h3>Starter</h3>
+                    <p class="plan-blurb">For trying Brivy with a lighter caseload.</p>
                     <div class="price">
-                        <span class="currency">$</span>
-                        <span class="amount">0</span>
-                        <span class="period">/month</span>
+                        <span class="currency">$</span><span class="amount">0</span><span class="period">/month</span>
                     </div>
                     <ul class="features">
-                        <li><i class="fas fa-check"></i> 20 Transcriptions/month</li>
+                        <li><i class="fas fa-check"></i> 20 transcriptions/month</li>
                         <li><i class="fas fa-check"></i> Therapy notes</li>
                         <li><i class="fas fa-check"></i> Treatment codes</li>
                         <li><i class="fas fa-check"></i> Access to previous transcripts</li>
                         <li><i class="fas fa-check"></i> 100% HIPAA compliance</li>
                     </ul>
-                    <a href="https://app.brivy.io/signup" class="btn-primary">Try Free</a>
+                    <a href="#waitlist" class="btn-secondary btn-block" data-waitlist>Join the waitlist</a>
                 </div>
-                <div class="pricing-card popular">
-                    <div class="popular-badge">Most Popular</div>
+                <div class="pricing-card popular reveal">
+                    <div class="popular-badge">Most popular</div>
                     <h3>Pro</h3>
+                    <p class="plan-blurb">For full-time clinicians who chart every day.</p>
                     <div class="price">
-                        <span class="currency">$</span>
-                        <span class="amount">49</span>
-                        <span class="period">/month</span>
+                        <span class="currency">$</span><span class="amount">49</span><span class="period">/month</span>
                     </div>
                     <ul class="features">
                         <li><i class="fas fa-check"></i> Everything in Starter, plus:</li>
                         <li><i class="fas fa-check"></i> Unlimited transcriptions</li>
-                        <li><i class="fas fa-check"></i> First-priority customer support</li>
+                        <li><i class="fas fa-check"></i> First-priority support</li>
                         <li><i class="fas fa-check"></i> Advanced analytics</li>
                         <li><i class="fas fa-check"></i> Custom integrations</li>
                     </ul>
-                    <a href="https://app.brivy.io/signup" class="btn-primary">Start Free Trial</a>
+                    <a href="#waitlist" class="btn-primary btn-block" data-waitlist>Join the waitlist</a>
                 </div>
             </div>
         </div>
     </section>
-
 
     <!-- FAQ Section -->
     <section class="faq" id="faq">
         <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="section-head">
+                <span class="section-kicker">FAQ</span>
+                <h2 class="section-title">Frequently asked questions</h2>
+            </div>
             <div class="faq-list">
                 <div class="faq-item">
-                    <button class="faq-question">
+                    <button class="faq-question" aria-expanded="false">
                         <span>Is Brivy HIPAA compliant?</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="faq-answer">
+                    <div class="faq-answer"><div>
                         <p>Yes, Brivy is 100% HIPAA compliant. We were built with a safety-first approach because we understand that protecting PHI is non-negotiable. As healthcare professionals ourselves, we've designed Brivy to meet the highest standards of security and compliance.</p>
-                    </div>
+                    </div></div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-question">
+                    <button class="faq-question" aria-expanded="false">
                         <span>Can I cancel my subscription anytime?</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="faq-answer">
-                        <p>Absolutely! You can cancel your subscription at any time with no cancellation fees. Your account will remain active until the end of your current billing period.</p>
-                    </div>
+                    <div class="faq-answer"><div>
+                        <p>Absolutely. You can cancel at any time with no cancellation fees. Your account stays active until the end of your current billing period.</p>
+                    </div></div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-question">
+                    <button class="faq-question" aria-expanded="false">
                         <span>How accurate are the therapy session transcriptions?</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="faq-answer">
-                        <p>Brivy uses advanced AI technology to provide highly accurate transcriptions. Our system is specifically trained on therapy terminology and mental health conversations, ensuring precision in therapy documentation.</p>
-                    </div>
+                    <div class="faq-answer"><div>
+                        <p>Brivy uses advanced AI to provide highly accurate transcriptions. It's tuned for therapy terminology and mental health conversations, so your documentation stays precise.</p>
+                    </div></div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-question">
+                    <button class="faq-question" aria-expanded="false">
                         <span>Do you offer refunds?</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="faq-answer">
-                        <p>We offer a 30-day money-back guarantee. If you're not satisfied with Brivy within the first 30 days, we'll provide a full refund, no questions asked.</p>
-                    </div>
+                    <div class="faq-answer"><div>
+                        <p>We offer a 30-day money-back guarantee. If you're not satisfied with Brivy within the first 30 days, we'll give you a full refund, no questions asked.</p>
+                    </div></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
+    <!-- Waitlist CTA Section -->
+    <section class="cta-section" id="waitlist">
         <div class="container">
             <div class="cta-content">
-                <h2>Ready to transform your therapy documentation?</h2>
-                <p>Start saving hours every week with Brivy.</p>
-                <a href="https://app.brivy.io/signup" class="btn-primary btn-large">Start Your Free Trial</a>
+                <h2>Ready to get your evenings back?</h2>
+                <p>Join the waitlist and we'll let you know as soon as Brivy opens up.</p>
+                <form class="waitlist-form waitlist-form--on-dark" data-waitlist-form data-source="cta">
+                    <label class="sr-only" for="ctaEmail">Email address</label>
+                    <input id="ctaEmail" type="email" name="email" placeholder="you@yourpractice.com" required autocomplete="email">
+                    <button type="submit" class="btn-light">Join the waitlist</button>
+                    <p class="form-status" role="status" aria-live="polite"></p>
+                </form>
             </div>
         </div>
     </section>
@@ -248,9 +305,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-left">
-                    <div class="footer-logo">
-                        <img src="https://via.placeholder.com/120x40/4F46E5/FFFFFF?text=BRIVY" alt="Brivy Logo">
-                    </div>
+                    <span class="wordmark wordmark--footer">Brivy</span>
                     <p>The AI therapy scribe built for therapists. Spend less time charting and more time connecting with clients.</p>
                 </div>
                 <div class="footer-middle">
@@ -258,7 +313,6 @@
                         <h4>Menu</h4>
                         <ul>
                             <li><a href="#how-it-works">How it works</a></li>
-                            <li><a href="#testimonials">Testimonials</a></li>
                             <li><a href="#pricing">Pricing</a></li>
                             <li><a href="#faq">FAQ</a></li>
                         </ul>
@@ -273,33 +327,33 @@
                     </div>
                 </div>
                 <div class="footer-right">
-                    <h4>Stay Updated</h4>
-                    <p>Get the latest updates and mental health AI insights.</p>
-                    <div class="newsletter">
-                        <input type="email" placeholder="Enter your email">
-                        <button class="btn-primary">Subscribe</button>
-                    </div>
-                    <div class="contact-info">
-                        <p><a href="mailto:support@brivy.io"><i class="fas fa-envelope"></i> support@brivy.io</a></p>
-                    </div>
+                    <h4>Stay updated</h4>
+                    <p>Get Brivy news and mental health AI insights.</p>
+                    <form class="waitlist-form waitlist-form--compact" data-waitlist-form data-source="footer">
+                        <label class="sr-only" for="footerEmail">Email address</label>
+                        <input id="footerEmail" type="email" name="email" placeholder="Enter your email" required autocomplete="email">
+                        <button type="submit" class="btn-primary">Subscribe</button>
+                        <p class="form-status" role="status" aria-live="polite"></p>
+                    </form>
+                    <p class="contact-info"><a href="mailto:support@brivy.io"><i class="fas fa-envelope"></i> support@brivy.io</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Brivy. All rights reserved.</p>
+                <p>&copy; <span data-year>2026</span> Brivy. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <!-- Video Modal -->
-    <div id="videoModal" class="video-modal">
+    <div id="videoModal" class="modal video-modal" role="dialog" aria-modal="true" aria-label="Brivy demo video">
         <div class="video-modal-content">
-            <span class="video-modal-close">&times;</span>
+            <button class="modal-close" aria-label="Close video">&times;</button>
             <div class="video-wrapper">
-                <iframe id="demoVideo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="demoVideo" title="Brivy demo video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>
